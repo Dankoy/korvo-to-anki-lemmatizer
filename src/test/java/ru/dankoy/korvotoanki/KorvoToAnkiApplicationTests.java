@@ -13,7 +13,6 @@ import ru.dankoy.korvotoanki.core.command.TitleCommand;
 import ru.dankoy.korvotoanki.core.command.VocabularyCommand;
 import ru.dankoy.korvotoanki.core.dao.vocabularybuilder.title.TitleDaoJdbc;
 import ru.dankoy.korvotoanki.core.dao.vocabularybuilder.vocabulary.VocabularyDaoJdbc;
-import ru.dankoy.korvotoanki.core.fabric.anki.AnkiDataFabricImpl;
 import ru.dankoy.korvotoanki.core.service.objectmapper.ObjectMapperServiceImpl;
 import ru.dankoy.korvotoanki.core.service.title.TitleServiceJdbc;
 import ru.dankoy.korvotoanki.core.service.vocabulary.VocabularyServiceJdbc;
@@ -37,7 +36,6 @@ class KorvoToAnkiApplicationTests {
     var vocabularyCommand = context.getBean(VocabularyCommand.class);
     var titleDaoJdbc = context.getBean(TitleDaoJdbc.class);
     var vocabularyDaoJdbc = context.getBean(VocabularyDaoJdbc.class);
-    var ankiDataFabric = context.getBean(AnkiDataFabricImpl.class);
     var objectMapperService = context.getBean(ObjectMapperServiceImpl.class);
     var titleServiceJdbc = context.getBean(TitleServiceJdbc.class);
     var vocabularyServiceJdbc = context.getBean(VocabularyServiceJdbc.class);
@@ -48,7 +46,6 @@ class KorvoToAnkiApplicationTests {
     assertNotNull(vocabularyCommand);
     assertNotNull(titleDaoJdbc);
     assertNotNull(vocabularyDaoJdbc);
-    assertNotNull(ankiDataFabric);
     assertNotNull(titleServiceJdbc);
     assertNotNull(vocabularyServiceJdbc);
   }
