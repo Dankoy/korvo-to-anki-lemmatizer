@@ -13,6 +13,15 @@ Lemmatizer for [korvo-to-anki](https://github.com/Dankoy/korvo-to-anki).
 
 Uses Stanford CoreNLP lib for lemmatization https://stanfordnlp.github.io/CoreNLP/lemma.html.
 
+# Stack
+
+* Java 21
+* Spring boot 3.2.5
+* Spring shell
+* Spring boot jdbc
+* Liquibase
+* Stanford CoreNLP
+
 # Purpose
 
 If you like me translated words as is in KOReader, then you have many words with like 'was' or '
