@@ -40,5 +40,5 @@ jobs:
           VALIDATE_SQL: false
           VALIDATE_SQLFLUFF: false
           FILTER_REGEX_EXCLUDE: "gradlew"
-          DEFAULT_BRANCH: main
+          DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
