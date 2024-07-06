@@ -39,6 +39,6 @@ jobs:
           VALIDATE_JAVA: false # make true someday
           VALIDATE_SQL: false
           VALIDATE_SQLFLUFF: false
-          FILTER_REGEX_EXCLUDE: "gradlew"
+          FILTER_REGEX_EXCLUDE: "mvn"
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

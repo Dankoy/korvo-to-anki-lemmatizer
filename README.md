@@ -57,7 +57,7 @@ Also you can have words like 'maintain' and 'maintained'. So you have already le
 means, you don't need to find lemma for word 'maintained'. Application will take such words, print
 them, so you can check and delete manually, or you can run command to delete them automatically.
 
-## Run 
+## Run
 
 #### On linux
 
@@ -66,7 +66,6 @@ them, so you can check and delete manually, or you can run command to delete the
 #### On windows
 
 `java "-Dspring.datasource.url=jdbc:sqlite:\path\to\vocabulary_builder.sqlite3" -jar .\korvo-to-anki-lemmatizer.jar`
-
 
 ## Commands
 
@@ -165,6 +164,15 @@ shell:>lav
 Command 'lemmatize-all-vocabularies' exists but is not currently available because first check and fix all duplicates
 Details of the error have been omitted. You can use the stacktrace command to print the full stacktrace.
 ```
+
+2) Didn't publish jar file in releases because it's too fat (500 Mbs). You have to clone and build
+   it yourself.
+
+```
+./mvnw clean package
+```
+
+Result jar is in target directory.
 
 ## 6. Move vocabulary builder db
 
