@@ -111,14 +111,7 @@ public class VocabularyDaoJdbc implements VocabularyDao {
         throw new VocabularyDaoException(ex);
       }
 
-      for (int i = 0; i < rowsUpdated.length; i++) {
-        if (rowsUpdated[i] == -2) {
-          log.error("Execution {}: unknown number of rows updated", i);
-          throw new VocabularyDaoException("Batch update error");
-        } else {
-          log.debug("Execution {} successful: {} rows updated", i, rowsUpdated[i]);
-        }
-      }
+      checkBatch(rowsUpdated);
     }
   }
 
@@ -150,13 +143,17 @@ public class VocabularyDaoJdbc implements VocabularyDao {
         throw new VocabularyDaoException(ex);
       }
 
-      for (int i = 0; i < rowsUpdated.length; i++) {
-        if (rowsUpdated[i] == -2) {
-          log.error("Execution {}: unknown number of rows updated", i);
-          throw new VocabularyDaoException("Batch update error");
-        } else {
-          log.debug("Execution {} successful: {} rows updated", i, rowsUpdated[i]);
-        }
+      checkBatch(rowsUpdated);
+    }
+  }
+
+  private void checkBatch(int[] rowsUpdated) {
+    for (int i = 0; i < rowsUpdated.length; i++) {
+      if (rowsUpdated[i] == -2) {
+        log.error("Execution {}: unknown number of rows updated", i);
+        throw new VocabularyDaoException("Batch update error");
+      } else {
+        log.debug("Execution {} successful: {} rows updated", i, rowsUpdated[i]);
       }
     }
   }
