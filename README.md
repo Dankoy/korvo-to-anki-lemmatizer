@@ -4,7 +4,7 @@
 ![GitHub Release Date](https://img.shields.io/github/release-date/dankoy/korvo-to-anki-lemmatizer)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/dankoy/korvo-to-anki-lemmatizer/total)
 
-[![Maven CI with Gradle](https://github.com/Dankoy/korvo-to-anki-lemmatizer/actions/workflows/gradle.yml/badge.svg?branch=main)](https://github.com/Dankoy/korvo-to-anki-lemmatizer/actions/workflows/maven.yml)
+[![Maven CI with Gradle](https://github.com/Dankoy/korvo-to-anki-lemmatizer/actions/workflows/gradle.yml/badge.svg?branch=master)](https://github.com/Dankoy/korvo-to-anki-lemmatizer/actions/workflows/maven.yml)
 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FDankoy%2Fkorvo-to-anki-lemmatizer&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 ![GitHub search hit counter](https://img.shields.io/github/search/dankoy/korvo-to-anki-lemmatizer/korvo-to-anki-lemmatizer)
