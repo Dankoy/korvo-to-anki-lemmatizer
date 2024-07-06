@@ -1,9 +1,6 @@
 package ru.dankoy.korvotoanki.core.dto;
 
-public record VocabularyLemmaDTO(
-    String word,
-    String lemma,
-    String title) {
+public record VocabularyLemmaDTO(String word, String lemma, String title) {
 
   @Override
   public boolean equals(Object o) {

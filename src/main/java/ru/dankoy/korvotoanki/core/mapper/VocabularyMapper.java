@@ -10,8 +10,7 @@ import ru.dankoy.korvotoanki.core.dto.VocabularyLemmaFullDTO;
 
 @Mapper(
     componentModel = MappingConstants.ComponentModel.SPRING,
-    unmappedTargetPolicy = ReportingPolicy.IGNORE
-)
+    unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface VocabularyMapper {
 
   VocabularyLemmaFullDTO addLemmaDto(Vocabulary vocabulary);
@@ -25,5 +24,4 @@ public interface VocabularyMapper {
 
   @Mapping(target = "title", ignore = true)
   Vocabulary fromDto(VocabularyLemmaDTO dto);
-
 }

@@ -105,8 +105,7 @@ public class VocabularyDaoJdbc implements VocabularyDao {
 
         rowsUpdated =
             vocabularyJdbcOperations.batchUpdate(
-                "update vocabulary set word = :lemma where word =:word", batchParams, keyHolder
-            );
+                "update vocabulary set word = :lemma where word =:word", batchParams, keyHolder);
 
       } catch (Exception ex) {
         throw new VocabularyDaoException(ex);
@@ -120,9 +119,7 @@ public class VocabularyDaoJdbc implements VocabularyDao {
           log.debug("Execution {} successful: {} rows updated", i, rowsUpdated[i]);
         }
       }
-
     }
-
   }
 
   @Override
@@ -147,8 +144,7 @@ public class VocabularyDaoJdbc implements VocabularyDao {
 
         rowsUpdated =
             vocabularyJdbcOperations.batchUpdate(
-                "delete from vocabulary where word = :word", batchParams, keyHolder
-            );
+                "delete from vocabulary where word = :word", batchParams, keyHolder);
 
       } catch (Exception ex) {
         throw new VocabularyDaoException(ex);
@@ -162,9 +158,7 @@ public class VocabularyDaoJdbc implements VocabularyDao {
           log.debug("Execution {} successful: {} rows updated", i, rowsUpdated[i]);
         }
       }
-
     }
-
   }
 
   @Override

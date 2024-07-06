@@ -30,9 +30,8 @@ public class LemmatizerServiceImpl implements LemmatizerService {
   @Override
   public List<VocabularyLemmaFullDTO> lemmatize(List<Vocabulary> vocabularies) {
 
-    List<VocabularyLemmaFullDTO> dtos = vocabularies.stream()
-        .map(vocabularyMapper::addLemmaDto)
-        .toList();
+    List<VocabularyLemmaFullDTO> dtos =
+        vocabularies.stream().map(vocabularyMapper::addLemmaDto).toList();
     List<VocabularyLemmaFullDTO> result = new CopyOnWriteArrayList<>();
 
     // async with splitting list into chunks
@@ -57,32 +56,30 @@ public class LemmatizerServiceImpl implements LemmatizerService {
 
     // filter words
     return result.stream().filter(v -> !v.word().equals(v.lemma())).toList();
-
   }
 
-  private void process(List<VocabularyLemmaFullDTO> vocabularies,
-      List<VocabularyLemmaFullDTO> result) {
+  private void process(
+      List<VocabularyLemmaFullDTO> vocabularies, List<VocabularyLemmaFullDTO> result) {
 
     // lemmatize vocabs containing only one word
-    Set<VocabularyLemmaFullDTO> lemmatized = vocabularies.stream()
-        .filter(v -> v.word().split(" ").length == 1)
-        .filter(v -> !v.word().contains("-"))
-        .map(v -> {
-
-          var coreDoc = stanfordCoreNLP.processToCoreDocument(v.word());
-          return vocabularyMapper.updateLemmaDto(coreDoc.tokens().get(0).lemma(), v);
-
-        })
-        .collect(Collectors.toSet());
+    Set<VocabularyLemmaFullDTO> lemmatized =
+        vocabularies.stream()
+            .filter(v -> v.word().split(" ").length == 1)
+            .filter(v -> !v.word().contains("-"))
+            .map(
+                v -> {
+                  var coreDoc = stanfordCoreNLP.processToCoreDocument(v.word());
+                  return vocabularyMapper.updateLemmaDto(coreDoc.tokens().get(0).lemma(), v);
+                })
+            .collect(Collectors.toSet());
 
     result.addAll(lemmatized);
 
     latch.countDown();
-
   }
 
-  private List<List<VocabularyLemmaFullDTO>> splitToPartitions(List<VocabularyLemmaFullDTO> list,
-      int cores) {
+  private List<List<VocabularyLemmaFullDTO>> splitToPartitions(
+      List<VocabularyLemmaFullDTO> list, int cores) {
 
     if (list.size() < cores) {
       List<List<VocabularyLemmaFullDTO>> l = new ArrayList<>();

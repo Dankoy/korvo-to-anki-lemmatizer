@@ -35,8 +35,7 @@ public class LemmatizerCommand {
   @Command(
       command = {"check-on-duplicates"},
       alias = "cod",
-      description = "Check lemmas on duplicates"
-  )
+      description = "Check lemmas on duplicates")
   public String checkOnDuplicates() {
 
     List<Vocabulary> vocabulary = vocabularyService.getAll();
@@ -45,39 +44,32 @@ public class LemmatizerCommand {
     var dtos = lemmatized.stream().map(vocabularyMapper::fromFullDto).toList();
 
     Set<VocabularyLemmaDTO> elements = new HashSet<>();
-    duplicates = dtos.stream()
-        .filter(n -> !elements.add(n))
-        .toList();
+    duplicates = dtos.stream().filter(n -> !elements.add(n)).toList();
 
     if (duplicates.isEmpty()) {
       lemmatizeAvailable = true;
     }
 
     return objectMapperService.convertToStringPrettyPrint(duplicates);
-
   }
 
   @CommandAvailability(provider = "duplicatesExists")
   @Command(
       command = {"auto-delete-duplicates"},
       alias = "add",
-      description = "Automatically delete duplicates. Do on your own risk."
-  )
+      description = "Automatically delete duplicates. Do on your own risk.")
   public void deleteDuplicates() {
 
     List<Vocabulary> vocabsToDelete = duplicates.stream().map(vocabularyMapper::fromDto).toList();
 
     vocabularyService.delete(vocabsToDelete);
-
   }
-
 
   @CommandAvailability
   @Command(
       command = {"check-existing-lemmas-if-exists"},
       alias = "celie",
-      description = "Check if db contains lemmas that could be ignored"
-  )
+      description = "Check if db contains lemmas that could be ignored")
   public String checkExistingLemmas() {
 
     List<Vocabulary> vocabulary = vocabularyService.getAll();
@@ -85,36 +77,39 @@ public class LemmatizerCommand {
 
     var dtos = lemmatized.stream().map(vocabularyMapper::fromFullDto).toList();
 
-    alreadyExistingLemmas = dtos.stream()
-        .filter(dto -> !dto.word().equals(dto.lemma()))
-        .filter(dto -> vocabulary.stream()
-            .anyMatch(s -> s.word().equals(dto.lemma()))) // filter if lemma equals word in db
-        .toList();
+    alreadyExistingLemmas =
+        dtos.stream()
+            .filter(dto -> !dto.word().equals(dto.lemma()))
+            .filter(
+                dto ->
+                    vocabulary.stream()
+                        .anyMatch(
+                            s -> s.word().equals(dto.lemma()))) // filter if lemma equals word in db
+            .toList();
 
     return objectMapperService.convertToStringPrettyPrint(alreadyExistingLemmas);
-
   }
 
   @CommandAvailability(provider = "lemmasExists")
   @Command(
       command = {"auto-delete-words-lemmas-exists"},
       alias = "adwle",
-      description = "Automatically delete words that already has lemmas in db for. Do on your own risk."
-  )
+      description =
+          "Automatically delete words that already has lemmas in db for. Do on your own risk.")
   public void deleteExistingLemmas() {
 
     var toDelete = alreadyExistingLemmas.stream().map(vocabularyMapper::fromDto).toList();
 
     vocabularyService.delete(toDelete);
-
   }
 
   @CommandAvailability(provider = {"lemmatizeAvailability"})
   @Command(
       command = {"lemmatize-all-vocabularies"},
       alias = "lav",
-      description = "Lemmatize vocabularies. Should be used only if check-on-duplicates command returns empty duplicates"
-  )
+      description =
+          "Lemmatize vocabularies. Should be used only if check-on-duplicates command returns empty"
+              + " duplicates")
   public String lemmatizeAllVocabularies() {
     List<Vocabulary> vocabulary = vocabularyService.getAll();
 
@@ -127,22 +122,25 @@ public class LemmatizerCommand {
 
   @Bean
   public AvailabilityProvider lemmatizeAvailability() {
-    return () -> lemmatizeAvailable
-        ? Availability.available()
-        : Availability.unavailable("first check and fix all duplicates");
+    return () ->
+        lemmatizeAvailable
+            ? Availability.available()
+            : Availability.unavailable("first check and fix all duplicates");
   }
 
   @Bean
   public AvailabilityProvider duplicatesExists() {
-    return () -> !duplicates.isEmpty()
-        ? Availability.available()
-        : Availability.unavailable("no duplicates");
+    return () ->
+        !duplicates.isEmpty()
+            ? Availability.available()
+            : Availability.unavailable("no duplicates");
   }
 
   @Bean
   public AvailabilityProvider lemmasExists() {
-    return () -> !alreadyExistingLemmas.isEmpty()
-        ? Availability.available()
-        : Availability.unavailable("some lemmas already exists, fix it");
+    return () ->
+        !alreadyExistingLemmas.isEmpty()
+            ? Availability.available()
+            : Availability.unavailable("some lemmas already exists, fix it");
   }
 }

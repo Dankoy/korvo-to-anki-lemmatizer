@@ -30,10 +30,10 @@ public class VocabularyServiceJdbc implements VocabularyService {
   public List<VocabularyLemmaFullDTO> updateLemmas(
       List<VocabularyLemmaFullDTO> vocabularyLemmaFullDTOS) {
 
-
-    var filtered = vocabularyLemmaFullDTOS.stream()
-        .filter(dto -> !dto.word().equals(dto.lemma())) // filter if word is equals lemma
-        .toList();
+    var filtered =
+        vocabularyLemmaFullDTOS.stream()
+            .filter(dto -> !dto.word().equals(dto.lemma())) // filter if word is equals lemma
+            .toList();
 
     vocabularyDao.batchUpdate(filtered);
 
@@ -45,7 +45,6 @@ public class VocabularyServiceJdbc implements VocabularyService {
   public void delete(List<Vocabulary> vocabularies) {
 
     vocabularyDao.batchDelete(vocabularies);
-
   }
 
   @Override

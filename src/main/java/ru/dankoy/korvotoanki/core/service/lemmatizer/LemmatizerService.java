@@ -7,5 +7,4 @@ import ru.dankoy.korvotoanki.core.dto.VocabularyLemmaFullDTO;
 public interface LemmatizerService {
 
   List<VocabularyLemmaFullDTO> lemmatize(List<Vocabulary> vocabularies);
-
 }

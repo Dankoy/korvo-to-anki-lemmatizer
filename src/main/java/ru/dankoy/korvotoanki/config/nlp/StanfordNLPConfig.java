@@ -18,12 +18,10 @@ public class StanfordNLPConfig {
     var props = new Properties();
 
     // set the list of annotators to run
-    props.setProperty(NlpProp.ANNOTATORS.getName(),
-        String.join(",", nlpProperties.getAnnotators()));
+    props.setProperty(
+        NlpProp.ANNOTATORS.getName(), String.join(",", nlpProperties.getAnnotators()));
 
     // build pipeline
     return new StanfordCoreNLP(props);
-
   }
-
 }

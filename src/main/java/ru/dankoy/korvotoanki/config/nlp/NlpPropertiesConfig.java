@@ -1,6 +1,5 @@
 package ru.dankoy.korvotoanki.config.nlp;
 
-
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,5 +11,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class NlpPropertiesConfig implements NlpProperties {
 
   private final List<String> annotators;
-
 }

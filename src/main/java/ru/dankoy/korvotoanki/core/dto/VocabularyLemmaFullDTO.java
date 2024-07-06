@@ -27,8 +27,6 @@ public record VocabularyLemmaFullDTO(
         from.reviewCount,
         from.prevContext,
         from.nextContext,
-        from.streakCount
-    );
+        from.streakCount);
   }
-
 }

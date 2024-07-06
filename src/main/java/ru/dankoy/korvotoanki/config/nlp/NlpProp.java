@@ -9,5 +9,4 @@ public enum NlpProp {
   ANNOTATORS("annotators");
 
   private final String name;
-
 }
