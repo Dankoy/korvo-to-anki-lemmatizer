@@ -22,7 +22,8 @@ import ru.dankoy.korvotoanki.core.service.vocabulary.VocabularyService;
 @Command(group = "lemmatize")
 public class LemmatizerCommand {
 
-  private boolean lemmatizeAvailable = false;
+  private boolean duplicatesCleaned = false;
+  private boolean duplicatesForExistingLemmasCleaned = false;
   private List<VocabularyLemmaDTO> duplicates = new ArrayList<>();
   private List<VocabularyLemmaDTO> alreadyExistingLemmas = new ArrayList<>();
 
@@ -47,7 +48,7 @@ public class LemmatizerCommand {
     duplicates = dtos.stream().filter(n -> !elements.add(n)).toList();
 
     if (duplicates.isEmpty()) {
-      lemmatizeAvailable = true;
+      duplicatesCleaned = true;
     }
 
     return objectMapperService.convertToStringPrettyPrint(duplicates);
@@ -87,6 +88,10 @@ public class LemmatizerCommand {
                             s -> s.word().equals(dto.lemma()))) // filter if lemma equals word in db
             .toList();
 
+    if (alreadyExistingLemmas.isEmpty()) {
+      duplicatesForExistingLemmasCleaned = true;
+    }
+
     return objectMapperService.convertToStringPrettyPrint(alreadyExistingLemmas);
   }
 
@@ -123,7 +128,7 @@ public class LemmatizerCommand {
   @Bean
   public AvailabilityProvider lemmatizeAvailability() {
     return () ->
-        lemmatizeAvailable
+        (duplicatesCleaned && duplicatesForExistingLemmasCleaned)
             ? Availability.available()
             : Availability.unavailable("first check and fix all duplicates");
   }
@@ -141,6 +146,6 @@ public class LemmatizerCommand {
     return () ->
         !alreadyExistingLemmas.isEmpty()
             ? Availability.available()
-            : Availability.unavailable("some lemmas already exists, fix it");
+            : Availability.unavailable("no duplicates");
   }
 }
