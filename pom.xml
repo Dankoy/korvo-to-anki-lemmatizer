@@ -141,15 +141,40 @@
           <java>
             <!-- no need to specify files, inferred automatically, but you can if you want -->
 
+            <cleanthat>
+              <version>2.8</version>                          <!-- optional version of Cleanthat -->
+              <sourceJdk>${maven.compiler.source}</sourceJdk> <!-- optional. Default to ${maven.compiler.source} else '1.7' -->
+              <mutators>
+                <mutator>SafeAndConsensual</mutator>          <!-- optional. Default to 'SafeAndConsensual' to include all mutators -->
+              </mutators>
+              <mutators>            <!-- List of mutators: https://github.com/solven-eu/cleanthat/blob/master/MUTATORS.generated.MD -->
+                <mutator>LiteralsFirstInComparisons</mutator> <!-- You may alternatively list the requested mutators -->
+              </mutators>
+              <excludedMutators>
+                <excludedMutator>OptionalNotEmpty</excludedMutator> <!-- You can discard specific rules -->
+              </excludedMutators>
+              <includeDraft>false</includeDraft>              <!-- optional. Default to false, not to include draft mutators from Composite mutators -->
+            </cleanthat>
+
+<!--            <prettier />         &lt;!&ndash; has its own section below &ndash;&gt;-->
+
+
             <!-- apply a specific flavor of google-java-format and reflow long strings -->
             <googleJavaFormat>
               <version>${google-java-format}</version>
+              <style>GOOGLE</style>
               <reflowLongStrings>true</reflowLongStrings>
               <formatJavadoc>false</formatJavadoc>
             </googleJavaFormat>
             <excludes>
               <exclude>target/**</exclude>
             </excludes>
+
+            <removeUnusedImports>
+              <engine>google-java-format</engine>
+            </removeUnusedImports> <!-- self-explanatory -->
+
+            <formatAnnotations />  <!-- fixes formatting of type annotations, see below -->
 
           </java>
           <sql>
