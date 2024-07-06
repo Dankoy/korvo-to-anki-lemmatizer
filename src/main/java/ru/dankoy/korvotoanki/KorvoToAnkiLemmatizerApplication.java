@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class KorvoToAnkiApplication {
+public class KorvoToAnkiLemmatizerApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(KorvoToAnkiApplication.class, args);
+    SpringApplication.run(KorvoToAnkiLemmatizerApplication.class, args);
   }
 }

@@ -20,4 +20,14 @@ public class ObjectMapperServiceImpl implements ObjectMapperService {
           String.format("Couldn't convert object of type '%s' to string", object.getClass()), e);
     }
   }
+
+  @Override
+  public String convertToStringPrettyPrint(Object object) {
+    try {
+      return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+    } catch (Exception e) {
+      throw new ObjectMapperException(
+          String.format("Couldn't convert object of type '%s' to string", object.getClass()), e);
+    }
+  }
 }

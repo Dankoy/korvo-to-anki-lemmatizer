@@ -5,9 +5,14 @@ spring:
   datasource:
     driver-class-name: org.sqlite.JDBC
     url: jdbc:sqlite:vocabulary_builder.sqlite3
+    hikari:
+      auto-commit: false
 
-  jooq:
-    sql-dialect: sqlite
+nlp:
+  annotators:
+    - tokenize
+    - pos
+    - lemma
 
 logging:
   level:
