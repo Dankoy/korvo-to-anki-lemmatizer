@@ -19,10 +19,24 @@
   <packaging>jar</packaging>
 
   <licenses>
-    <license/>
+    <license>
+      <name>BSD-3-Clause</name>
+      <url>https://spdx.org/licenses/BSD-3-Clause.html</url>
+      <distribution>repo</distribution>
+    </license>
   </licenses>
   <developers>
-    <developer/>
+    <developer>
+      <id>Dankoy</id>
+      <name>Dankoy</name>
+      <email>-</email>
+      <url>hthttps://github.com/Dankoy</url>
+      <roles>
+        <role>maintainer</role>
+        <role>developer</role>
+      </roles>
+      <timezone>Europe/Moscow</timezone>
+    </developer>
   </developers>
 
   <properties>
