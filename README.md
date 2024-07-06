@@ -39,6 +39,17 @@ Also you can have words like 'maintain' and 'maintained'. So you have already le
 means, you don't need to find lemma for word 'maintained'. Application will take such words, print
 them, so you can check and delete manually, or you can run command to delete them automatically.
 
+## Run 
+
+#### On linux
+
+`java -jar -Dspring.datasource.url=jdbc:sqlite:/path/to/vocabulary_builder.sqlite3 korvo-to-anki-lemmatizer.jar `
+
+#### On windows
+
+`java "-Dspring.datasource.url=jdbc:sqlite:\path\to\vocabulary_builder.sqlite3" -jar .\korvo-to-anki-lemmatizer.jar`
+
+
 ## Commands
 
 ```

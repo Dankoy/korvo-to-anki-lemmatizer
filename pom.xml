@@ -13,7 +13,7 @@
 
   <groupId>ru.dankoy</groupId>
   <artifactId>korvo-to-anki-lemmatizer</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>korvo-to-anki-lemmatizer</name>
   <description>korvo-to-anki-lemmatizer</description>
   <packaging>jar</packaging>
@@ -30,7 +30,7 @@
       <id>Dankoy</id>
       <name>Dankoy</name>
       <email>-</email>
-      <url>hthttps://github.com/Dankoy</url>
+      <url>https://github.com/Dankoy</url>
       <roles>
         <role>maintainer</role>
         <role>developer</role>
