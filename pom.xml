@@ -36,6 +36,9 @@
     <spring-shell.version>3.2.6</spring-shell.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+    <spotless.version>2.45.0</spotless.version>
+    <spotless-plugin.version>2.43.0</spotless-plugin.version>
+    <google-java-format>1.19.2</google-java-format>
   </properties>
 
 
@@ -97,6 +100,56 @@
           </annotationProcessorPaths>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless-plugin.version}</version>
+        <configuration>
+          <formats>
+            <!-- you can define as many formats as you want, each is independent -->
+            <format>
+              <!-- define the files to apply to -->
+              <includes>
+                <include>.gitattributes</include>
+                <include>.gitignore</include>
+              </includes>
+              <!-- define the steps to apply to those files -->
+              <trimTrailingWhitespace/>
+              <endWithNewline/>
+              <indent>
+                <tabs>true</tabs>
+                <spacesPerTab>4</spacesPerTab>
+              </indent>
+            </format>
+          </formats>
+          <!-- define a language-specific format -->
+          <java>
+            <!-- no need to specify files, inferred automatically, but you can if you want -->
+
+            <!-- apply a specific flavor of google-java-format and reflow long strings -->
+            <googleJavaFormat>
+              <version>${google-java-format}</version>
+              <reflowLongStrings>true</reflowLongStrings>
+              <formatJavadoc>false</formatJavadoc>
+            </googleJavaFormat>
+            <excludes>
+              <exclude>target/**</exclude>
+            </excludes>
+
+          </java>
+          <sql>
+            <!-- You have to set the target manually -->
+            <includes>
+              <include>src/main/resources/**/*.sql</include>
+              <include>src/test/resources/**/*.sql</include>
+            </includes>
+
+            <dbeaver/>  <!-- has its own section below -->
+          </sql>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
@@ -164,7 +217,12 @@
     <dependency>
       <groupId>com.diffplug.spotless</groupId>
       <artifactId>spotless-lib</artifactId>
-      <version>2.45.0</version>
+      <version>${spotless.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.diffplug.spotless</groupId>
+      <artifactId>spotless-maven-plugin</artifactId>
+      <version>${spotless-plugin.version}</version>
     </dependency>
 
     <dependency>
