@@ -8,7 +8,7 @@ name: Full Lint Code Base
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 permissions: read-all    
 

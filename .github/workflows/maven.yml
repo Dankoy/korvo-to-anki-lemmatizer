@@ -9,7 +9,7 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 permissions:
   contents: read
@@ -28,21 +28,8 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: gradle validation
-      uses: gradle/actions/wrapper-validation@v3
+    - name: Run the Maven verify phase
+      run: mvn --batch-mode --update-snapshots verify
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
-
-    - name: Run the tests
-      run: ./gradlew test
-
-    - name: Run build
-      run: ./gradlew bootJar
-
-    - name: Save result jar for further use
-      uses: actions/upload-artifact@v4
-      with:
-       name: app.jar
-       path: build/libs/*
-       retention-days: 5
+    - name: Build
+      run: mvn package
