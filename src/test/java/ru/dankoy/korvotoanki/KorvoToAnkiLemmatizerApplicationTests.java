@@ -23,7 +23,7 @@ import ru.dankoy.korvotoanki.core.service.vocabulary.VocabularyServiceJdbc;
       "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration"
     })
 @SpringBootTest
-class KorvoToAnkiApplicationTests {
+class KorvoToAnkiLemmatizerApplicationTests {
 
   @Autowired ApplicationContext context;
 

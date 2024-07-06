@@ -17,6 +17,12 @@ spring:
   liquibase:
     enabled: true
 
+nlp:
+  annotators:
+    - tokenize
+    - pos
+    - lemma
+
 logging:
   level:
     ru.dankoy.*: INFO
