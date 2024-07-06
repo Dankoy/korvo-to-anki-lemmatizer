@@ -25,7 +25,7 @@ import ru.dankoy.korvotoanki.core.exceptions.VocabularyDaoException;
 @RequiredArgsConstructor
 public class VocabularyDaoJdbc implements VocabularyDao {
 
-  private static final int BATCH_SIZE = 5;
+  private static final int BATCH_SIZE = 100;
 
   private static final String COLUMN_TITLE_ID = "title_id";
 
