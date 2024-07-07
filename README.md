@@ -24,9 +24,9 @@ Uses Stanford CoreNLP lib for lemmatization https://stanfordnlp.github.io/CoreNL
 
 # Purpose
 
-If you like me translated words as is in KOReader, then you have many words with like 'was' or '
-maintained'. Also such words can be duplicated by lemma of such words (vocabulary_builder plugin
-never checks that). But anki cards has to have lemmas of such words. For example lemma for word '
+If you, like me, translated words as is in KOReader, then you have many words with like 'was' or '
+maintained'. Also, such words can be duplicated by lemma of such words (vocabulary_builder plugin
+never checks that). But anki cards has to have lemmas of such words. For example, lemma for word '
 was' is 'be' and lemma for word 'maintained' is 'maintain'.
 
 So this app checks for such words and rewrites it in lemmas.
@@ -41,7 +41,7 @@ Functionality:
 2) Check for words that already has lemmas in db and delete them from db.
 3) Get lemmas from words and update them in db
 
-To correctly use this project it's necessary to keep in mind that backups are absolutely necessary,
+To correctly use this project, it's necessary to keep in mind that backups are absolutely necessary,
 and automatic operations for duplicates removal should be done on your own risk. You can check
 duplicates before deleting them manually or automatically. Application never tries to figure out
 which word is better to be kept and which has to be deleted. It just deletes randomly if you have
@@ -53,9 +53,9 @@ Words like 'maintained', 'maintains' are considered to be duplicates because the
 as 'maintain'. Application will take one of them and print, so you can check and manually, or you
 can run command to delete one of the word automatically.
 
-Also you can have words like 'maintain' and 'maintained'. So you have already lemma in db, and that
+Also, you can have words like 'maintain' and 'maintained'. So you have already lemma in db, and that
 means, you don't need to find lemma for word 'maintained'. Application will take such words, print
-them, so you can check and delete manually, or you can run command to delete them automatically.
+them, so you can check and delete manually, or you can run a command to delete them automatically.
 
 ## Run
 
