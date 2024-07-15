@@ -13,7 +13,7 @@
 
   <groupId>ru.dankoy</groupId>
   <artifactId>korvo-to-anki-lemmatizer</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <name>korvo-to-anki-lemmatizer</name>
   <description>korvo-to-anki-lemmatizer</description>
   <packaging>jar</packaging>
