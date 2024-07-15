@@ -68,8 +68,8 @@ public class LemmatizerCommand {
 
   @CommandAvailability
   @Command(
-      command = {"check-existing-lemmas-if-exists"},
-      alias = "celie",
+      command = {"check-lemmas-if-exists"},
+      alias = "clie",
       description = "Check if db contains lemmas that could be ignored")
   public String checkExistingLemmas() {
 
@@ -113,8 +113,12 @@ public class LemmatizerCommand {
       command = {"lemmatize-all-vocabularies"},
       alias = "lav",
       description =
-          "Lemmatize vocabularies. Should be used only if check-on-duplicates command returns empty"
-              + " duplicates")
+          """
+          Lemmatize vocabularies.
+          Should be used only if
+            1) check-on-duplicates (cod) command returns empty list
+            2) check-lemmas-if-exists (clie) command returns empty list
+          """)
   public String lemmatizeAllVocabularies() {
     List<Vocabulary> vocabulary = vocabularyService.getAll();
 
@@ -122,7 +126,9 @@ public class LemmatizerCommand {
 
     var updated = vocabularyService.updateLemmas(res);
 
-    return objectMapperService.convertToString(updated);
+    var dtos = updated.stream().map(vocabularyMapper::fromFullDto).toList();
+
+    return objectMapperService.convertToStringPrettyPrint(dtos);
   }
 
   @Bean
