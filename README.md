@@ -71,8 +71,12 @@ them, so you can check and delete manually, or you can run a command to delete t
 
 ```
 lemmatize
-       * lemmatize-all-vocabularies, lav: Lemmatize vocabularies. Should be used only if check-on-duplicates command returns empty duplicates
-       check-existing-lemmas-if-exists, celie: Check if db contains lemmas that could be ignored
+       check-lemmas-if-exists, clie: Check if db contains lemmas that could be ignored
+       * lemmatize-all-vocabularies, lav: Lemmatize vocabularies.
+       Should be used only if
+         1) check-on-duplicates (cod) command returns empty list
+         2) check-lemmas-if-exists (clie) command returns empty list
+
        * auto-delete-duplicates, add: Automatically delete duplicates. Do on your own risk.
        check-on-duplicates, cod: Check lemmas on duplicates
        * auto-delete-words-lemmas-exists, adwle: Automatically delete words that already has lemmas in db for. Do on your own risk.
@@ -83,7 +87,7 @@ lemmatize
 First check on already existing lemmas in db.
 
 ```shell
-shell:>celie
+shell:>clie
 17:57:38.607 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
 17:57:38.949 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@113dcaf8
 17:57:38.951 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
