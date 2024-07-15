@@ -122,7 +122,9 @@ public class LemmatizerCommand {
 
     var updated = vocabularyService.updateLemmas(res);
 
-    return objectMapperService.convertToString(updated);
+    var dtos = updated.stream().map(vocabularyMapper::fromFullDto).toList();
+
+    return objectMapperService.convertToStringPrettyPrint(dtos);
   }
 
   @Bean
