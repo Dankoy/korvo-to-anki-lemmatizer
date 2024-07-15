@@ -2,11 +2,15 @@ spring:
   application:
     name: korvo-to-anki-lemmatization
 
+
   datasource:
     driver-class-name: org.sqlite.JDBC
     url: jdbc:sqlite:vocabulary_builder.sqlite3
     hikari:
       auto-commit: false
+  shell:
+    interactive:
+      enabled: true
 
 nlp:
   annotators:
