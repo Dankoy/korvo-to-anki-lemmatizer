@@ -16,7 +16,7 @@ Uses Stanford CoreNLP lib for lemmatization https://stanfordnlp.github.io/CoreNL
 # Stack
 
 * Java 21
-* Spring boot 3.2.5
+* Spring boot 3.3.2
 * Spring shell
 * Spring boot jdbc
 * Liquibase
