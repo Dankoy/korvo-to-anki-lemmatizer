@@ -175,7 +175,7 @@ More details can be found [here](https://github.com/Dankoy/korvo-to-anki-lemmati
 ```shell
 shell:>lavko
 18:04:19.608 [main] INFO  r.d.k.c.d.v.v.VocabularyDaoJdbc - Batch size: 100
-18:04:19.608 [main] INFO  r.d.k.c.d.v.v.VocabularyDaoJdbc - Batch: [VocabularyLemmaFullDTO[word=dripping, lemma=drip, title=Title[id=1, name=Orcs, filter=1], createTime=1658041927, reviewTime=0, dueTime=1658042227, reviewCount=0, prevContext=null, nextContext=null, streakCount=0], VocabularyLemmaFullDTO[word=marshlands, lemma=marshland, 
+18:04:19.608 [main] INFO  r.d.k.c.d.v.v.VocabularyDaoJdbc - Batch: [VocabularyLemmaFullDTO[word=dripping, lemma=drip, title=Title[id=1, name=Orcs, filter=1], createTime=1658041927, reviewTime=0, dueTime=1658042227, reviewCount=0, prevContext=null, nextContext=(dripping), streakCount=0], VocabularyLemmaFullDTO[word=marshlands, lemma=marshland, 
 ...
 ```
 
