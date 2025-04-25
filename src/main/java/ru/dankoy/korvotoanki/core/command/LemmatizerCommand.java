@@ -183,6 +183,9 @@ public class LemmatizerCommand {
   private List<VocabularyLemmaFullDTO> keepOriginalWordWithLemma(
       List<VocabularyLemmaFullDTO> dtoList) {
     return dtoList.stream()
+        .filter(v -> v.word().split(" ").length == 1)
+        .filter(v -> !v.word().contains("-"))
+        .filter(dto -> !dto.word().equals(dto.lemma())) // filter if word is equals lemma
         .map(
             vcl -> {
               var originalWithNextContext = String.format("(%s)%s", vcl.word(), vcl.nextContext());
