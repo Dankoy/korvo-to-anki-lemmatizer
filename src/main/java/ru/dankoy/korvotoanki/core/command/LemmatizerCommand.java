@@ -188,7 +188,7 @@ public class LemmatizerCommand {
         .filter(dto -> !dto.word().equals(dto.lemma())) // filter if word is equals lemma
         .map(
             vcl -> {
-              var originalWithNextContext = String.format("(%s)%s", vcl.word(), vcl.nextContext());
+              var originalWithNextContext = vcl.nextContext() == null ? String.format("(%s)", vcl.word()) : String.format("(%s)%s", vcl.word(), vcl.nextContext());
               return new VocabularyLemmaFullDTO(
                   vcl.word(),
                   vcl.lemma(),
