@@ -131,6 +131,31 @@ public class LemmatizerCommand {
     return objectMapperService.convertToStringPrettyPrint(dtos);
   }
 
+  @CommandAvailability(provider = {"lemmatizeAvailability"})
+  @Command(
+      command = {"lemmatize-all-vocabularies-keep-original"},
+      alias = "lavko",
+      description =
+          """
+          Lemmatize vocabularies and keep original word.
+          Should be used only if
+            1) check-on-duplicates (cod) command returns empty list
+            2) check-lemmas-if-exists (clie) command returns empty list
+          """)
+  public String lemmatizeAllVocabulariesAndKeepOriginalWord() {
+    List<Vocabulary> vocabulary = vocabularyService.getAll();
+
+    List<VocabularyLemmaFullDTO> res = lemmatizerService.lemmatize(vocabulary);
+
+    var keepOriginalDto = keepOriginalWordWithLemma(res);
+
+    var updated = vocabularyService.updateLemmas(keepOriginalDto);
+
+    var dtos = updated.stream().map(vocabularyMapper::fromFullDto).toList();
+
+    return objectMapperService.convertToStringPrettyPrint(dtos);
+  }
+
   @Bean
   public AvailabilityProvider lemmatizeAvailability() {
     return () ->
@@ -153,5 +178,26 @@ public class LemmatizerCommand {
         !alreadyExistingLemmas.isEmpty()
             ? Availability.available()
             : Availability.unavailable("no duplicates");
+  }
+
+  private List<VocabularyLemmaFullDTO> keepOriginalWordWithLemma(
+      List<VocabularyLemmaFullDTO> dtoList) {
+    return dtoList.stream()
+        .map(
+            vcl -> {
+              var originalWithNextContext = String.format("(%s)%s", vcl.word(), vcl.nextContext());
+              return new VocabularyLemmaFullDTO(
+                  vcl.word(),
+                  vcl.lemma(),
+                  vcl.title(),
+                  vcl.createTime(),
+                  vcl.reviewTime(),
+                  vcl.dueTime(),
+                  vcl.reviewCount(),
+                  vcl.prevContext(),
+                  originalWithNextContext,
+                  vcl.streakCount());
+            })
+        .toList();
   }
 }
