@@ -105,7 +105,21 @@ public class VocabularyDaoJdbc implements VocabularyDao {
 
         rowsUpdated =
             vocabularyJdbcOperations.batchUpdate(
-                "update vocabulary set word = :lemma where word =:word", batchParams, keyHolder);
+                """
+                update vocabulary set
+                title_id = :title.id,
+                create_time = :createTime,
+                review_time = :reviewTime,
+                due_time = :dueTime,
+                review_count = :reviewCount,
+                prev_context = :prevContext,
+                next_context = :nextContext,
+                streak_count = :streakCount,
+                word = :lemma
+                where word = :word
+                """,
+                batchParams,
+                keyHolder);
 
       } catch (Exception ex) {
         throw new VocabularyDaoException(ex);

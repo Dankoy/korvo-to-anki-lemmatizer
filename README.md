@@ -40,6 +40,7 @@ Functionality:
 1) Check duplicated words and delete them in db
 2) Check for words that already has lemmas in db and delete them from db.
 3) Get lemmas from words and update them in db
+4) Possible to keep original words after lemmatization in db. More [here](https://github.com/Dankoy/korvo-to-anki-lemmatizer/issues/29)
 
 To correctly use this project, it's necessary to keep in mind that backups are absolutely necessary,
 and automatic operations for duplicates removal should be done on your own risk. You can check
@@ -150,12 +151,31 @@ shell:>add
 
 After deleting got to step 5
 
-## 5. Lemmatize your db
+## 5. Lemmatize your db and keep or not keep original words 
+
+### Don't keep original words
+
+If you don't want to keep original words then use `lav` command
 
 ```shell
 shell:>lav
 18:04:19.608 [main] INFO  r.d.k.c.d.v.v.VocabularyDaoJdbc - Batch size: 100
 18:04:19.608 [main] INFO  r.d.k.c.d.v.v.VocabularyDaoJdbc - Batch: [VocabularyLemmaFullDTO[word=dripping, lemma=drip, title=Title[id=1, name=Orcs, filter=1], createTime=1658041927, reviewTime=0, dueTime=1658042227, reviewCount=0, prevContext=null, nextContext=null, streakCount=0], VocabularyLemmaFullDTO[word=marshlands, lemma=marshland, 
+...
+```
+
+### Keep original words
+
+If you want to keep original words then use `lavko` command. 
+
+This command will keep original word and put it in nextContext in db. 
+ 
+More details can be found [here](https://github.com/Dankoy/korvo-to-anki-lemmatizer/issues/29)
+
+```shell
+shell:>lavko
+18:04:19.608 [main] INFO  r.d.k.c.d.v.v.VocabularyDaoJdbc - Batch size: 100
+18:04:19.608 [main] INFO  r.d.k.c.d.v.v.VocabularyDaoJdbc - Batch: [VocabularyLemmaFullDTO[word=dripping, lemma=drip, title=Title[id=1, name=Orcs, filter=1], createTime=1658041927, reviewTime=0, dueTime=1658042227, reviewCount=0, prevContext=null, nextContext=(dripping), streakCount=0], VocabularyLemmaFullDTO[word=marshlands, lemma=marshland, 
 ...
 ```
 
