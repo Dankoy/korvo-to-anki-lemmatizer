@@ -170,7 +170,7 @@ If you want to keep original words then use `lavko` command.
 
 This command will keep original word and put it in nextContext in db. 
  
-More details can be found [here](https://github.com/Dankoy/korvo-to-anki-lemmatizer/pull/30)
+More details can be found [here](https://github.com/Dankoy/korvo-to-anki-lemmatizer/issues/29)
 
 ```shell
 shell:>lavko
