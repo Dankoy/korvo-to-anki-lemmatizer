@@ -12,6 +12,16 @@ Lemmatizer for [korvo-to-anki](https://github.com/Dankoy/korvo-to-anki).
 
 Uses Stanford CoreNLP lib for lemmatization https://stanfordnlp.github.io/CoreNLP/lemma.html.
 
+> [!NOTE]
+> Didn't publish jar file in releases because it's too fat (500 Mbs). You have to clone and build
+>   it yourself.
+>
+> ```
+> ./mvnw clean package
+> ```
+>
+> Result jar is in target directory.
+
 # Stack
 
 * Java 21
@@ -187,15 +197,6 @@ shell:>lav
 Command 'lemmatize-all-vocabularies' exists but is not currently available because first check and fix all duplicates
 Details of the error have been omitted. You can use the stacktrace command to print the full stacktrace.
 ```
-
-2) Didn't publish jar file in releases because it's too fat (500 Mbs). You have to clone and build
-   it yourself.
-
-```
-./mvnw clean package
-```
-
-Result jar is in target directory.
 
 ## 6. Move vocabulary builder db
 
