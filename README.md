@@ -23,7 +23,7 @@ Uses Stanford CoreNLP lib for lemmatization https://stanfordnlp.github.io/CoreNL
 > Result jar is in target directory.
 
 > [!NOTE]
-> If you have questions about running this utility then feel free to ask it in [github discusstions](https://github.com/Dankoy/korvo-to-anki-lemmatizer/discussions) or in [discord server](https://discord.gg/uK9dqt8q)
+> If you have questions about running this utility then feel free to ask it in [github discusstions](https://github.com/Dankoy/korvo-to-anki-lemmatizer/discussions) or in [discord server](https://discord.gg/2dXKpVkaBE)
 
 # Stack
 
