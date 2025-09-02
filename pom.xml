@@ -53,6 +53,7 @@
     <spotless.version>3.3.1</spotless.version>
     <spotless-plugin.version>2.46.1</spotless-plugin.version>
     <google-java-format>1.26.0</google-java-format>
+    <stanford-corenlp>4.5.7</stanford-corenlp>
   </properties>
 
 
@@ -245,12 +246,12 @@
     <dependency>
       <groupId>edu.stanford.nlp</groupId>
       <artifactId>stanford-corenlp</artifactId>
-      <version>4.5.7</version>
+      <version>${stanford-corenlp}</version>
     </dependency>
     <dependency>
       <groupId>edu.stanford.nlp</groupId>
       <artifactId>stanford-corenlp</artifactId>
-      <version>4.5.7</version>
+      <version>${stanford-corenlp}</version>
       <classifier>models</classifier>
     </dependency>
 
