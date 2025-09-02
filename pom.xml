@@ -52,8 +52,8 @@
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
     <spotless.version>3.3.1</spotless.version>
     <spotless-plugin.version>2.46.1</spotless-plugin.version>
-    <google-java-format>1.26.0</google-java-format>
-    <stanford-corenlp>4.5.7</stanford-corenlp>
+    <google-java-format.version>1.26.0</google-java-format.version>
+    <stanford-corenlp.version>4.5.7</stanford-corenlp.version>
   </properties>
 
 
@@ -164,7 +164,7 @@
 
             <!-- apply a specific flavor of google-java-format and reflow long strings -->
             <googleJavaFormat>
-              <version>${google-java-format}</version>
+              <version>${google-java-format.version}</version>
               <style>GOOGLE</style>
               <reflowLongStrings>true</reflowLongStrings>
               <formatJavadoc>false</formatJavadoc>
@@ -246,12 +246,12 @@
     <dependency>
       <groupId>edu.stanford.nlp</groupId>
       <artifactId>stanford-corenlp</artifactId>
-      <version>${stanford-corenlp}</version>
+      <version>${stanford-corenlp.version}</version>
     </dependency>
     <dependency>
       <groupId>edu.stanford.nlp</groupId>
       <artifactId>stanford-corenlp</artifactId>
-      <version>${stanford-corenlp}</version>
+      <version>${stanford-corenlp.version}</version>
       <classifier>models</classifier>
     </dependency>
 
