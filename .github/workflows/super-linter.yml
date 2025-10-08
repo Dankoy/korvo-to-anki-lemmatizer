@@ -43,6 +43,8 @@ jobs:
           VALIDATE_MARKDOWN_PRETTIER: false
           VALIDATE_YAML_PRETTIER: false
           VALIDATE_TRIVY: false # vulnerabilities
+          VALIDATE_BIOME_LINT: false
+          VALIDATE_BIOME_FORMAT: false
           FILTER_REGEX_EXCLUDE: "mvnw"
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
