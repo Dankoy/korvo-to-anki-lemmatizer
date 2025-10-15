@@ -20,7 +20,7 @@ import ru.dankoy.korvotoanki.core.dto.VocabularyLemmaFullDTO;
 import ru.dankoy.korvotoanki.core.exceptions.KorvoRootException;
 import ru.dankoy.korvotoanki.core.mapper.VocabularyMapper;
 
-@ConditionalOnProperty(prefix = "korvo-to-anki", name = "async-type", havingValue = "completable_future")
+@ConditionalOnProperty(prefix = "korvo-to-anki", name = "async-type", havingValue = "latch")
 
 @Slf4j
 @Service
