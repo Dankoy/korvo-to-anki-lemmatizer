@@ -12,11 +12,15 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import ru.dankoy.korvotoanki.core.domain.Vocabulary;
 import ru.dankoy.korvotoanki.core.dto.VocabularyLemmaFullDTO;
 import ru.dankoy.korvotoanki.core.exceptions.KorvoRootException;
 import ru.dankoy.korvotoanki.core.mapper.VocabularyMapper;
+
+@ConditionalOnProperty(prefix = "korvo-to-anki", name = "async-type", havingValue = "completable_future")
 
 @Slf4j
 @Service
