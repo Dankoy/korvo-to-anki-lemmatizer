@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import ru.dankoy.korvotoanki.core.aspect.annot.LogExecutionTime;
 import ru.dankoy.korvotoanki.core.domain.Vocabulary;
 import ru.dankoy.korvotoanki.core.dto.VocabularyLemmaFullDTO;
 import ru.dankoy.korvotoanki.core.mapper.VocabularyMapper;
@@ -23,6 +24,7 @@ public class LemmatizerServiceVirtualThreads implements LemmatizerService {
   private final StanfordCoreNLP stanfordCoreNLP;
   private final VocabularyMapper vocabularyMapper;
 
+  @LogExecutionTime
   @Override
   public List<VocabularyLemmaFullDTO> lemmatize(List<Vocabulary> vocabularies) {
 
