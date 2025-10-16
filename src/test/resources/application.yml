@@ -23,6 +23,9 @@ nlp:
     - pos
     - lemma
 
+korvo-to-anki:
+  async-type: vtcf
+
 logging:
   level:
     ru.dankoy.*: INFO
