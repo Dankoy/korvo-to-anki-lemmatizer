@@ -20,7 +20,7 @@ import ru.dankoy.korvotoanki.core.service.vocabulary.VocabularyServiceJdbc;
 @DisplayName("Test default context ")
 @TestPropertySource(
     properties = {
-      "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration"
+      "spring.autoconfigure.exclude=org.springframework.boot.liquibase.autoconfigure.LiquibaseAutoConfiguration"
     })
 @SpringBootTest
 class KorvoToAnkiLemmatizerApplicationTests {
