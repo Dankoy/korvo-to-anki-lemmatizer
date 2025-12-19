@@ -52,7 +52,7 @@
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
     <spotless.version>4.1.0</spotless.version>
     <spotless-plugin.version>3.1.0</spotless-plugin.version>
-    <google-java-format.version>1.26.0</google-java-format.version>
+    <google-java-format.version>1.33.0</google-java-format.version>
     <stanford-corenlp.version>4.5.10</stanford-corenlp.version>
     <lombok.version>1.18.32</lombok.version>
   </properties>
