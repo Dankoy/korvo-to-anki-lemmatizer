@@ -7,7 +7,7 @@ version: 2
 updates:
   - package-ecosystem: "maven" # See documentation for possible values
     cooldown:
-      default-days: 5
+      default-days: 7
     directory: "/" # Location of package manifests
     schedule:
       interval: "monthly"
@@ -21,7 +21,7 @@ updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     cooldown:
-      default-days: 5
+      default-days: 7
     directory: "/"
     schedule:
       interval: "monthly"
