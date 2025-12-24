@@ -8,7 +8,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>4.0.1</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>ru.dankoy</groupId>
@@ -55,6 +55,9 @@
     <google-java-format.version>1.33.0</google-java-format.version>
     <stanford-corenlp.version>4.5.10</stanford-corenlp.version>
     <lombok.version>1.18.32</lombok.version>
+    <argLine /> <!-- Necessary for test running to not overwrite existing argLine if other plugins
+    are used. SHOULD BE REMOVED if other plugins are used 
+    https://github.com/OpenRefine/OpenRefine/issues/6913 -->
   </properties>
 
 
@@ -91,6 +94,27 @@
           </excludes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>
+            @{argLine} 
+            -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar</argLine>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -131,8 +155,8 @@
                 <include>.gitignore</include>
               </includes>
               <!-- define the steps to apply to those files -->
-              <trimTrailingWhitespace/>
-              <endWithNewline/>
+              <trimTrailingWhitespace />
+              <endWithNewline />
               <indent>
                 <tabs>true</tabs>
                 <spacesPerTab>4</spacesPerTab>
@@ -145,22 +169,28 @@
 
             <cleanthat>
               <version>2.22</version>                          <!-- optional version of Cleanthat -->
-              <sourceJdk>${maven.compiler.source}</sourceJdk> <!-- optional. Default to ${maven.compiler.source} else '1.7' -->
+              <sourceJdk>${maven.compiler.source}</sourceJdk> <!-- optional. Default to
+              ${maven.compiler.source} else '1.7' -->
               <mutators>
-                <mutator>SafeAndConsensual</mutator>          <!-- optional. Default to 'SafeAndConsensual' to include all mutators -->
+                <mutator>SafeAndConsensual</mutator>          <!-- optional. Default to 'SafeAndConsensual' to
+                include all mutators -->
                 <mutator>SonarMutators</mutator>
                 <mutator>SpotBugsMutators</mutator>
               </mutators>
-              <!-- <mutators>            List of mutators: https://github.com/solven-eu/cleanthat/blob/master/MUTATORS.generated.MD -->
-                <!-- <mutator>LiteralsFirstInComparisons</mutator> You may alternatively list the requested mutators -->
+              <!-- <mutators>            List of mutators:
+              https://github.com/solven-eu/cleanthat/blob/master/MUTATORS.generated.MD -->
+              <!-- <mutator>LiteralsFirstInComparisons</mutator> You may alternatively list the
+              requested mutators -->
               <!-- </mutators> -->
-               <excludedMutators>
-                <excludedMutator>AvoidInlineConditionals</excludedMutator> <!-- You can discard specific rules -->
-              </excludedMutators> 
-              <includeDraft>false</includeDraft>              <!-- optional. Default to false, not to include draft mutators from Composite mutators -->
+              <excludedMutators>
+                <excludedMutator>AvoidInlineConditionals</excludedMutator> <!-- You can discard
+                specific rules -->
+              </excludedMutators>
+              <includeDraft>false</includeDraft>              <!-- optional. Default to false, not to include
+              draft mutators from Composite mutators -->
             </cleanthat>
 
-<!--            <prettier />         &lt;!&ndash; has its own section below &ndash;&gt;-->
+            <!--            <prettier />         &lt;!&ndash; has its own section below &ndash;&gt;-->
 
 
             <!-- apply a specific flavor of google-java-format and reflow long strings -->
@@ -176,7 +206,8 @@
 
             <removeUnusedImports>
               <engine>google-java-format</engine>
-            </removeUnusedImports> <!-- self-explanatory -->
+            </removeUnusedImports> <!--
+            self-explanatory -->
 
             <formatAnnotations />  <!-- fixes formatting of type annotations, see below -->
 
@@ -188,7 +219,7 @@
               <include>src/test/resources/**/*.sql</include>
             </includes>
 
-            <dbeaver/>  <!-- has its own section below -->
+            <dbeaver />  <!-- has its own section below -->
           </sql>
         </configuration>
       </plugin>
@@ -199,8 +230,8 @@
   <dependencies>
 
     <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-aspectj</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aspectj</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -288,6 +319,11 @@
       <version>${lombok-mapstruct-binding.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 
