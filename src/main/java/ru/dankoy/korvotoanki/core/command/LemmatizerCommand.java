@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.shell.Availability;
-import org.springframework.shell.AvailabilityProvider;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.CommandAvailability;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.availability.Availability;
+import org.springframework.shell.core.command.availability.AvailabilityProvider;
+import org.springframework.stereotype.Component;
 import ru.dankoy.korvotoanki.core.domain.Vocabulary;
 import ru.dankoy.korvotoanki.core.dto.VocabularyLemmaDTO;
 import ru.dankoy.korvotoanki.core.dto.VocabularyLemmaFullDTO;
@@ -19,7 +19,7 @@ import ru.dankoy.korvotoanki.core.service.objectmapper.ObjectMapperService;
 import ru.dankoy.korvotoanki.core.service.vocabulary.VocabularyService;
 
 @RequiredArgsConstructor
-@Command(group = "lemmatize")
+@Component
 public class LemmatizerCommand {
 
   private boolean duplicatesCleaned = false;
@@ -32,9 +32,9 @@ public class LemmatizerCommand {
   private final VocabularyMapper vocabularyMapper;
   private final ObjectMapperService objectMapperService;
 
-  @CommandAvailability
   @Command(
-      command = {"check-on-duplicates"},
+      group = "lemmatize",
+      name = {"check-on-duplicates"},
       alias = "cod",
       description = "Check lemmas on duplicates")
   public String checkOnDuplicates() {
@@ -54,11 +54,12 @@ public class LemmatizerCommand {
     return objectMapperService.convertToStringPrettyPrint(duplicates);
   }
 
-  @CommandAvailability(provider = "duplicatesExists")
   @Command(
-      command = {"auto-delete-duplicates"},
+      group = "lemmatize",
+      name = {"auto-delete-duplicates"},
       alias = "add",
-      description = "Automatically delete duplicates. Do on your own risk.")
+      description = "Automatically delete duplicates. Do on your own risk.",
+      availabilityProvider = "duplicatesExists")
   public void deleteDuplicates() {
 
     List<Vocabulary> vocabsToDelete = duplicates.stream().map(vocabularyMapper::fromDto).toList();
@@ -66,9 +67,9 @@ public class LemmatizerCommand {
     vocabularyService.delete(vocabsToDelete);
   }
 
-  @CommandAvailability
   @Command(
-      command = {"check-lemmas-if-exists"},
+      group = "lemmatize",
+      name = {"check-lemmas-if-exists"},
       alias = "clie",
       description = "Check if db contains lemmas that could be ignored")
   public String checkExistingLemmas() {
@@ -95,12 +96,13 @@ public class LemmatizerCommand {
     return objectMapperService.convertToStringPrettyPrint(alreadyExistingLemmas);
   }
 
-  @CommandAvailability(provider = "lemmasExists")
   @Command(
-      command = {"auto-delete-words-lemmas-exists"},
+      group = "lemmatize",
+      name = {"auto-delete-words-lemmas-exists"},
       alias = "adwle",
       description =
-          "Automatically delete words that already has lemmas in db for. Do on your own risk.")
+          "Automatically delete words that already has lemmas in db for. Do on your own risk.",
+      availabilityProvider = "lemmasExists")
   public void deleteExistingLemmas() {
 
     var toDelete = alreadyExistingLemmas.stream().map(vocabularyMapper::fromDto).toList();
@@ -108,9 +110,9 @@ public class LemmatizerCommand {
     vocabularyService.delete(toDelete);
   }
 
-  @CommandAvailability(provider = {"lemmatizeAvailability"})
   @Command(
-      command = {"lemmatize-all-vocabularies"},
+      group = "lemmatize",
+      name = {"lemmatize-all-vocabularies"},
       alias = "lav",
       description =
           """
@@ -118,7 +120,8 @@ public class LemmatizerCommand {
           Should be used only if
             1) check-on-duplicates (cod) command returns empty list
             2) check-lemmas-if-exists (clie) command returns empty list
-          """)
+          """,
+      availabilityProvider = "lemmatizeAvailability")
   public String lemmatizeAllVocabularies() {
     List<Vocabulary> vocabulary = vocabularyService.getAll();
 
@@ -131,9 +134,9 @@ public class LemmatizerCommand {
     return objectMapperService.convertToStringPrettyPrint(dtos);
   }
 
-  @CommandAvailability(provider = {"lemmatizeAvailability"})
   @Command(
-      command = {"lemmatize-all-vocabularies-keep-original"},
+      group = "lemmatize",
+      name = {"lemmatize-all-vocabularies-keep-original"},
       alias = "lavko",
       description =
           """
@@ -141,7 +144,8 @@ public class LemmatizerCommand {
           Should be used only if
             1) check-on-duplicates (cod) command returns empty list
             2) check-lemmas-if-exists (clie) command returns empty list
-          """)
+          """,
+      availabilityProvider = "lemmatizeAvailability")
   public String lemmatizeAllVocabulariesAndKeepOriginalWord() {
     List<Vocabulary> vocabulary = vocabularyService.getAll();
 
