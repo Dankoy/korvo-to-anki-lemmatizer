@@ -95,7 +95,7 @@ lemmatize
        * auto-delete-words-lemmas-exists, adwle: Automatically delete words that already has lemmas in db for. Do on your own risk.
 ```
 
-## 1. Check on exising lemmas
+## 1. Check on existing lemmas
 
 First check on already existing lemmas in db.
 
