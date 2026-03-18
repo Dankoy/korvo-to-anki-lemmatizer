@@ -40,13 +40,13 @@ public class LemmatizerServiceImpl implements LemmatizerService {
 
     // async with splitting list into chunks
     int cores = Runtime.getRuntime().availableProcessors();
-    List<List<VocabularyLemmaFullDTO>> splitted = splitToPartitions(dtos, cores);
+    List<List<VocabularyLemmaFullDTO>> split = splitToPartitions(dtos, cores);
 
-    latch = new CountDownLatch(splitted.size());
+    latch = new CountDownLatch(split.size());
 
     try (ExecutorService executorService = Executors.newFixedThreadPool(cores)) {
 
-      for (List<VocabularyLemmaFullDTO> sp : splitted) {
+      for (List<VocabularyLemmaFullDTO> sp : split) {
         executorService.execute(() -> process(sp, result));
       }
 
