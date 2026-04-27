@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,6 @@ public class LemmatizerServiceVirtualThreads implements LemmatizerService {
     try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
       List<CompletableFuture<VocabularyLemmaFullDTO>> cfs =
           dtos.stream()
-              .filter(v -> v.word().split(" ").length == 1)
               .filter(v -> !v.word().contains("-"))
               .map(
                   dto -> {
@@ -53,11 +53,7 @@ public class LemmatizerServiceVirtualThreads implements LemmatizerService {
           CompletableFuture.allOf(cfs.toArray(new CompletableFuture[cfs.size()]))
               .thenApply(
                   // map cfs results into list
-                  future -> cfs.stream().map(CompletableFuture::join).flatMap(Stream::of).toList())
-              .thenApply(
-                  // filter words
-                  resultList ->
-                      resultList.stream().filter(v -> !v.word().equals(v.lemma())).toList());
+                  future -> cfs.stream().map(CompletableFuture::join).flatMap(Stream::of).toList());
 
       return allOf.join();
     }
@@ -67,6 +63,11 @@ public class LemmatizerServiceVirtualThreads implements LemmatizerService {
 
     // lemmatize vocabs containing only one word
     var coreDoc = stanfordCoreNLP.processToCoreDocument(vocabulary.word());
-    return vocabularyMapper.updateLemmaDto(coreDoc.tokens().get(0).lemma(), vocabulary);
+
+    // convert list of CoreDocuments to string of lemmatized words
+    var lemmaWord =
+        coreDoc.tokens().stream().map(token -> token.lemma()).collect(Collectors.joining(" "));
+
+    return vocabularyMapper.updateLemmaDto(lemmaWord, vocabulary);
   }
 }
