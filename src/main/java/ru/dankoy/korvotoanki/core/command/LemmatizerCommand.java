@@ -7,6 +7,7 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Option;
 import org.springframework.shell.core.command.availability.Availability;
 import org.springframework.shell.core.command.availability.AvailabilityProvider;
 import org.springframework.stereotype.Component;
@@ -160,6 +161,35 @@ public class LemmatizerCommand {
     return objectMapperService.convertToStringPrettyPrint(dtos);
   }
 
+  @Command(
+      group = "lemmatize",
+      name = {"lemmatize-word"},
+      alias = "lw",
+      description =
+          """
+          Lemmatize a single word.
+          Should be used only if you want to check how lemmatizer works on a single word.
+          """)
+  public String lemmatizeWord(
+      @Option(
+              required = true,
+              description = "The word to lemmatize",
+              shortName = 'w',
+              longName = "word")
+          String word) {
+
+    Vocabulary vocab = new Vocabulary(word, null, 0, 0, 0, 0, null, null, 0);
+    List<Vocabulary> vocabulary = List.of(vocab);
+
+    List<VocabularyLemmaFullDTO> res = lemmatizerService.lemmatize(vocabulary);
+
+    var keepOriginalDto = keepOriginalWordWithLemma(res);
+
+    var dtos = keepOriginalDto.stream().map(vocabularyMapper::fromFullDto).toList();
+
+    return objectMapperService.convertToStringPrettyPrint(dtos);
+  }
+
   @Bean
   public AvailabilityProvider lemmatizeAvailability() {
     return () ->
@@ -187,9 +217,7 @@ public class LemmatizerCommand {
   private List<VocabularyLemmaFullDTO> keepOriginalWordWithLemma(
       List<VocabularyLemmaFullDTO> dtoList) {
     return dtoList.stream()
-        .filter(v -> v.word().split(" ").length == 1)
         .filter(v -> !v.word().contains("-"))
-        .filter(dto -> !dto.word().equals(dto.lemma())) // filter if word is equals lemma
         .map(
             vcl -> {
               var originalWithNextContext =
