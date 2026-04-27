@@ -43,7 +43,7 @@ was' is 'be' and lemma for word 'maintained' is 'maintain'.
 
 So this app checks for such words and rewrites it in lemmas.
 
-> [!Attention]
+> [!ATTENTION]
 > 
 > Lemmatization works only for strings containing
 > 1) one word without hyphen (held)
