@@ -1,5 +1,6 @@
 package ru.dankoy.korvotoanki.core.service.lemmatizer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -113,6 +114,98 @@ public class LemmatizerServiceVirtualThreadsTest {
 
     // Assert
     assertEquals(0, result.size());
+  }
+
+  @Test
+  public void testLemmatizeWithMultipleWordVocabulary_expectsFilteringWordWithLemmaSameAsWord() {
+
+    // Arrange
+    Vocabulary vocabulary = new Vocabulary("give back", null, 0, 0, 0, 0, null, null, 0);
+    VocabularyLemmaFullDTO expectedDto =
+        new VocabularyLemmaFullDTO("give back", "give back", null, 0, 0, 0, 0, null, null, 0);
+
+    var coreDocMock = mock(CoreDocument.class);
+    var tokenMock1 = mock(CoreLabel.class);
+    var tokenMock2 = mock(CoreLabel.class);
+
+    when(tokenMock1.lemma()).thenReturn("give");
+    when(tokenMock2.lemma()).thenReturn("back");
+
+    when(coreDocMock.tokens()).thenReturn(List.of(tokenMock1, tokenMock2));
+
+    when(vocabularyMapper.addLemmaDto(vocabulary)).thenReturn(expectedDto);
+    when(vocabularyMapper.updateLemmaDto(Mockito.anyString(), Mockito.eq(expectedDto)))
+        .thenReturn(expectedDto);
+    when(stanfordCoreNLP.processToCoreDocument("give back")).thenReturn(coreDocMock);
+
+    // Act
+    List<VocabularyLemmaFullDTO> result = lemmatizerService.lemmatize(List.of(vocabulary));
+
+    // Assert
+    assertEquals(0, result.size());
+  }
+
+  @Test
+  public void testLemmatizeWithOldLemmaAndItsWordForms_expectsOnlyWordFormsReturned() {
+
+    // Arrange
+    Vocabulary oldLemma = new Vocabulary("give back", null, 0, 0, 0, 0, null, null, 0);
+    Vocabulary wordForm1 = new Vocabulary("gave back", null, 0, 0, 0, 0, null, null, 0);
+    Vocabulary wordForm2 = new Vocabulary("giving back", null, 0, 0, 0, 0, null, null, 0);
+
+    VocabularyLemmaFullDTO oldLemmaDto =
+        new VocabularyLemmaFullDTO("give back", "give back", null, 0, 0, 0, 0, null, null, 0);
+    VocabularyLemmaFullDTO wordForm1Dto =
+        new VocabularyLemmaFullDTO("gave back", "give back", null, 0, 0, 0, 0, null, null, 0);
+    VocabularyLemmaFullDTO wordForm2Dto =
+        new VocabularyLemmaFullDTO("giving back", "give back", null, 0, 0, 0, 0, null, null, 0);
+
+    var oldLemmaCoreDocMock = mock(CoreDocument.class);
+    var oldLemmaTokenMock1 = mock(CoreLabel.class);
+    var oldLemmaTokenMock2 = mock(CoreLabel.class);
+
+    when(oldLemmaTokenMock1.lemma()).thenReturn("give");
+    when(oldLemmaTokenMock2.lemma()).thenReturn("back");
+    when(oldLemmaCoreDocMock.tokens()).thenReturn(List.of(oldLemmaTokenMock1, oldLemmaTokenMock2));
+
+    var wordForm1CoreDocMock = mock(CoreDocument.class);
+    var wordForm1TokenMock1 = mock(CoreLabel.class);
+    var wordForm1TokenMock2 = mock(CoreLabel.class);
+
+    when(wordForm1TokenMock1.lemma()).thenReturn("give");
+    when(wordForm1TokenMock2.lemma()).thenReturn("back");
+    when(wordForm1CoreDocMock.tokens())
+        .thenReturn(List.of(wordForm1TokenMock1, wordForm1TokenMock2));
+
+    var wordForm2CoreDocMock = mock(CoreDocument.class);
+    var wordForm2TokenMock1 = mock(CoreLabel.class);
+    var wordForm2TokenMock2 = mock(CoreLabel.class);
+
+    when(wordForm2TokenMock1.lemma()).thenReturn("give");
+    when(wordForm2TokenMock2.lemma()).thenReturn("back");
+    when(wordForm2CoreDocMock.tokens())
+        .thenReturn(List.of(wordForm2TokenMock1, wordForm2TokenMock2));
+
+    when(vocabularyMapper.addLemmaDto(oldLemma)).thenReturn(oldLemmaDto);
+    when(vocabularyMapper.addLemmaDto(wordForm1)).thenReturn(wordForm1Dto);
+    when(vocabularyMapper.addLemmaDto(wordForm2)).thenReturn(wordForm2Dto);
+    when(vocabularyMapper.updateLemmaDto(Mockito.anyString(), Mockito.eq(oldLemmaDto)))
+        .thenReturn(oldLemmaDto);
+    when(vocabularyMapper.updateLemmaDto(Mockito.anyString(), Mockito.eq(wordForm1Dto)))
+        .thenReturn(wordForm1Dto);
+    when(vocabularyMapper.updateLemmaDto(Mockito.anyString(), Mockito.eq(wordForm2Dto)))
+        .thenReturn(wordForm2Dto);
+    when(stanfordCoreNLP.processToCoreDocument("give back")).thenReturn(oldLemmaCoreDocMock);
+    when(stanfordCoreNLP.processToCoreDocument("gave back")).thenReturn(wordForm1CoreDocMock);
+    when(stanfordCoreNLP.processToCoreDocument("giving back")).thenReturn(wordForm2CoreDocMock);
+
+    // Act
+    List<VocabularyLemmaFullDTO> result =
+        lemmatizerService.lemmatize(List.of(oldLemma, wordForm1, wordForm2));
+
+    // Assert
+    assertEquals(2, result.size());
+    assertThat(result).containsExactlyInAnyOrder(wordForm1Dto, wordForm2Dto);
   }
 
   @Test
