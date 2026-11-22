@@ -34,23 +34,23 @@ public class LemmatizerServiceVirtualThreadsTest {
   public void testLemmatizeWithSingleWordWithWhitespaceVocabulary_expectsCorrectResult() {
 
     // Arrange
-    Vocabulary vocabulary = new Vocabulary("example word", null, 0, 0, 0, 0, null, null, 0);
+    Vocabulary vocabulary = new Vocabulary("gave back", null, 0, 0, 0, 0, null, null, 0);
     VocabularyLemmaFullDTO expectedDto =
-        new VocabularyLemmaFullDTO("example word", "example word", null, 0, 0, 0, 0, null, null, 0);
+        new VocabularyLemmaFullDTO("gave back", "give back", null, 0, 0, 0, 0, null, null, 0);
 
     var coreDocMock = mock(CoreDocument.class);
     var tokenMock1 = mock(CoreLabel.class);
     var tokenMock2 = mock(CoreLabel.class);
 
-    when(tokenMock1.lemma()).thenReturn("example");
-    when(tokenMock2.lemma()).thenReturn("word");
+    when(tokenMock1.lemma()).thenReturn("give");
+    when(tokenMock2.lemma()).thenReturn("back");
 
     when(coreDocMock.tokens()).thenReturn(List.of(tokenMock1, tokenMock2));
 
     when(vocabularyMapper.addLemmaDto(vocabulary)).thenReturn(expectedDto);
     when(vocabularyMapper.updateLemmaDto(Mockito.anyString(), Mockito.eq(expectedDto)))
         .thenReturn(expectedDto);
-    when(stanfordCoreNLP.processToCoreDocument("example word")).thenReturn(coreDocMock);
+    when(stanfordCoreNLP.processToCoreDocument("gave back")).thenReturn(coreDocMock);
 
     // Act
     List<VocabularyLemmaFullDTO> result = lemmatizerService.lemmatize(List.of(vocabulary));
@@ -62,6 +62,34 @@ public class LemmatizerServiceVirtualThreadsTest {
 
   @Test
   public void testLemmatizeWithSingleWordWithoutWhitespaceVocabulary_expectsCorrectResult() {
+
+    // Arrange
+    Vocabulary vocabulary = new Vocabulary("examples", null, 0, 0, 0, 0, null, null, 0);
+    VocabularyLemmaFullDTO expectedDto =
+        new VocabularyLemmaFullDTO("examples", "example", null, 0, 0, 0, 0, null, null, 0);
+
+    var coreDocMock = mock(CoreDocument.class);
+    var tokenMock1 = mock(CoreLabel.class);
+
+    when(tokenMock1.lemma()).thenReturn("example");
+
+    when(coreDocMock.tokens()).thenReturn(List.of(tokenMock1));
+
+    when(vocabularyMapper.addLemmaDto(vocabulary)).thenReturn(expectedDto);
+    when(vocabularyMapper.updateLemmaDto(Mockito.anyString(), Mockito.eq(expectedDto)))
+        .thenReturn(expectedDto);
+    when(stanfordCoreNLP.processToCoreDocument("examples")).thenReturn(coreDocMock);
+
+    // Act
+    List<VocabularyLemmaFullDTO> result = lemmatizerService.lemmatize(List.of(vocabulary));
+
+    // Assert
+    assertEquals(1, result.size());
+    assertEquals(expectedDto, result.get(0));
+  }
+
+  @Test
+  public void testLemmatizeWithSingleWordVocabulary_expectsFilteringWordWithLemmaSameAsWord() {
 
     // Arrange
     Vocabulary vocabulary = new Vocabulary("example", null, 0, 0, 0, 0, null, null, 0);
@@ -84,8 +112,7 @@ public class LemmatizerServiceVirtualThreadsTest {
     List<VocabularyLemmaFullDTO> result = lemmatizerService.lemmatize(List.of(vocabulary));
 
     // Assert
-    assertEquals(1, result.size());
-    assertEquals(expectedDto, result.get(0));
+    assertEquals(0, result.size());
   }
 
   @Test
@@ -109,11 +136,11 @@ public class LemmatizerServiceVirtualThreadsTest {
   public void testLemmatizeWithMultipleWordVocabulary_expectsFilteringWordWithDash() {
 
     // Arrange
-    Vocabulary vocabulary1 = new Vocabulary("example word", null, 0, 0, 0, 0, null, null, 0);
+    Vocabulary vocabulary1 = new Vocabulary("gave back", null, 0, 0, 0, 0, null, null, 0);
     Vocabulary vocabulary2 = new Vocabulary("example-word", null, 0, 0, 0, 0, null, null, 0);
 
     VocabularyLemmaFullDTO expectedDto1 =
-        new VocabularyLemmaFullDTO("example word", "example word", null, 0, 0, 0, 0, null, null, 0);
+        new VocabularyLemmaFullDTO("gave back", "give back", null, 0, 0, 0, 0, null, null, 0);
     VocabularyLemmaFullDTO expectedDto2 =
         new VocabularyLemmaFullDTO("example-word", "example-word", null, 0, 0, 0, 0, null, null, 0);
 
@@ -121,8 +148,8 @@ public class LemmatizerServiceVirtualThreadsTest {
     var tokenMock1 = mock(CoreLabel.class);
     var tokenMock2 = mock(CoreLabel.class);
 
-    when(tokenMock1.lemma()).thenReturn("example");
-    when(tokenMock2.lemma()).thenReturn("word");
+    when(tokenMock1.lemma()).thenReturn("give");
+    when(tokenMock2.lemma()).thenReturn("back");
 
     when(coreDocMock.tokens()).thenReturn(List.of(tokenMock1, tokenMock2));
 
@@ -130,7 +157,7 @@ public class LemmatizerServiceVirtualThreadsTest {
     when(vocabularyMapper.addLemmaDto(vocabulary2)).thenReturn(expectedDto2);
     when(vocabularyMapper.updateLemmaDto(Mockito.anyString(), Mockito.eq(expectedDto1)))
         .thenReturn(expectedDto1);
-    when(stanfordCoreNLP.processToCoreDocument("example word")).thenReturn(coreDocMock);
+    when(stanfordCoreNLP.processToCoreDocument("gave back")).thenReturn(coreDocMock);
 
     // Act
     List<VocabularyLemmaFullDTO> result =

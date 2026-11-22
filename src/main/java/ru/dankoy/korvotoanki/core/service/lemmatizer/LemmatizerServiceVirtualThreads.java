@@ -53,7 +53,11 @@ public class LemmatizerServiceVirtualThreads implements LemmatizerService {
           CompletableFuture.allOf(cfs.toArray(new CompletableFuture[cfs.size()]))
               .thenApply(
                   // map cfs results into list
-                  future -> cfs.stream().map(CompletableFuture::join).flatMap(Stream::of).toList());
+                  future -> cfs.stream().map(CompletableFuture::join).flatMap(Stream::of).toList())
+              .thenApply(
+                  // filter words
+                  resultList ->
+                      resultList.stream().filter(v -> !v.word().equals(v.lemma())).toList());
 
       return allOf.join();
     }
