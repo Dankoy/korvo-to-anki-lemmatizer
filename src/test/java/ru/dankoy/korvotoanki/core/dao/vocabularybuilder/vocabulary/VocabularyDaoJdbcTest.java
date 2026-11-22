@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.test.context.TestPropertySource;
 import ru.dankoy.korvotoanki.core.domain.Title;
 import ru.dankoy.korvotoanki.core.domain.Vocabulary;
+import ru.dankoy.korvotoanki.core.dto.VocabularyLemmaFullDTO;
 
 @DisplayName("Test VocabularyDaoJdbc ")
 @TestPropertySource(
@@ -94,6 +95,41 @@ class VocabularyDaoJdbcTest {
     var actual = vocabularyDaoJdbc.count();
 
     assertThat(actual).isZero();
+  }
+
+  @DisplayName("batchUpdate rewrites word to lemma")
+  @Test
+  void batchUpdate() {
+
+    var title = new Title(1L, "Title1", 1L);
+    var dto =
+        new VocabularyLemmaFullDTO(
+            "word", "lemma", title, 1_695_239_837L, 0, 1_695_240_137L, 0, null, "new next", 0);
+
+    vocabularyDaoJdbc.batchUpdate(List.of(dto));
+
+    var words = jdbcOperations.queryForList("select word from vocabulary", String.class);
+
+    assertThat(words).contains("lemma").doesNotContain("word");
+    assertThat(vocabularyDaoJdbc.count()).isEqualTo(2);
+
+    var nextContext =
+        jdbcOperations.queryForObject(
+            "select next_context from vocabulary where word = 'lemma'", String.class);
+    assertThat(nextContext).isEqualTo("new next");
+  }
+
+  @DisplayName("batchDelete deletes by word")
+  @Test
+  void batchDelete() {
+
+    var toDelete = new Vocabulary("word", null, 0, 0, 0, 0, null, null, 0);
+
+    vocabularyDaoJdbc.batchDelete(List.of(toDelete));
+
+    var words = jdbcOperations.queryForList("select word from vocabulary", String.class);
+
+    assertThat(words).containsExactly("contemplating");
   }
 
   private List<Vocabulary> correctVocabularies() {
