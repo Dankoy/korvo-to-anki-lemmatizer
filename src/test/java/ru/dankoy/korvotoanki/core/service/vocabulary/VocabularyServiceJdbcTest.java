@@ -3,11 +3,13 @@ package ru.dankoy.korvotoanki.core.service.vocabulary;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,8 +18,9 @@ import ru.dankoy.korvotoanki.core.dao.vocabularybuilder.vocabulary.VocabularyDao
 import ru.dankoy.korvotoanki.core.dao.vocabularybuilder.vocabulary.VocabularyDaoJdbc;
 import ru.dankoy.korvotoanki.core.domain.Title;
 import ru.dankoy.korvotoanki.core.domain.Vocabulary;
+import ru.dankoy.korvotoanki.core.dto.VocabularyLemmaFullDTO;
 
-@DisplayName("Test TitleServiceJdbc ")
+@DisplayName("Test VocabularyServiceJdbc ")
 @SpringBootTest(classes = {VocabularyServiceJdbc.class, VocabularyDaoJdbc.class})
 class VocabularyServiceJdbcTest {
 
@@ -70,6 +73,35 @@ class VocabularyServiceJdbcTest {
     assertThat(actual).isEqualTo(correct.size());
 
     Mockito.verify(vocabularyDao, times(1)).count();
+  }
+
+  @DisplayName("updateLemmas filters dtos with word equals lemma")
+  @Test
+  void updateLemmas() {
+
+    var wordEqualsLemma =
+        new VocabularyLemmaFullDTO("word", "word", null, 0, 0, 0, 0, null, null, 0);
+    var wordDiffersLemma = new VocabularyLemmaFullDTO("was", "be", null, 0, 0, 0, 0, null, null, 0);
+
+    ArgumentCaptor<List<VocabularyLemmaFullDTO>> captor = ArgumentCaptor.forClass(List.class);
+
+    var actual = vocabularyService.updateLemmas(List.of(wordEqualsLemma, wordDiffersLemma));
+
+    verify(vocabularyDao, times(1)).batchUpdate(captor.capture());
+
+    assertThat(captor.getValue()).containsExactly(wordDiffersLemma);
+    assertThat(actual).containsExactly(wordDiffersLemma);
+  }
+
+  @DisplayName("delete delegates to dao")
+  @Test
+  void delete() {
+
+    var toDelete = List.of(new Vocabulary("word", null, 0, 0, 0, 0, null, null, 0));
+
+    vocabularyService.delete(toDelete);
+
+    verify(vocabularyDao, times(1)).batchDelete(toDelete);
   }
 
   private List<Vocabulary> correctVocabularies() {
