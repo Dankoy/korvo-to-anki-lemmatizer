@@ -1,12 +1,10 @@
 package ru.dankoy.korvotoanki.core.dao.vocabularybuilder.vocabulary;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -86,10 +84,7 @@ public class VocabularyDaoJdbc implements VocabularyDao {
   @Override
   public void batchUpdate(List<VocabularyLemmaFullDTO> vocabularies) {
 
-    Collection<List<VocabularyLemmaFullDTO>> batches =
-        vocabularies.stream()
-            .collect(Collectors.groupingBy(it -> vocabularies.indexOf(it) / BATCH_SIZE))
-            .values();
+    List<List<VocabularyLemmaFullDTO>> batches = partition(vocabularies);
 
     int[] rowsUpdated;
 
@@ -132,10 +127,7 @@ public class VocabularyDaoJdbc implements VocabularyDao {
   @Override
   public void batchDelete(List<Vocabulary> vocabularies) {
 
-    Collection<List<Vocabulary>> batches =
-        vocabularies.stream()
-            .collect(Collectors.groupingBy(it -> vocabularies.indexOf(it) / BATCH_SIZE))
-            .values();
+    List<List<Vocabulary>> batches = partition(vocabularies);
 
     int[] rowsUpdated;
 
@@ -170,6 +162,14 @@ public class VocabularyDaoJdbc implements VocabularyDao {
         log.debug("Execution {} successful: {} rows updated", i, rowsUpdated[i]);
       }
     }
+  }
+
+  private static <T> List<List<T>> partition(List<T> list) {
+    List<List<T>> batches = new ArrayList<>();
+    for (int i = 0; i < list.size(); i += BATCH_SIZE) {
+      batches.add(list.subList(i, Math.min(i + BATCH_SIZE, list.size())));
+    }
+    return batches;
   }
 
   @Override

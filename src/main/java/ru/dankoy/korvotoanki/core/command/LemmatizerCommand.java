@@ -179,15 +179,12 @@ public class LemmatizerCommand {
           String word) {
 
     Vocabulary vocab = new Vocabulary(word, null, 0, 0, 0, 0, null, null, 0);
-    List<Vocabulary> vocabulary = List.of(vocab);
 
-    List<VocabularyLemmaFullDTO> res = lemmatizerService.lemmatize(vocabulary);
+    var res = lemmatizerService.lemmatize(vocab);
 
-    var keepOriginalDto = keepOriginalWordWithLemma(res);
+    var dto = vocabularyMapper.fromFullDto(res);
 
-    var dtos = keepOriginalDto.stream().map(vocabularyMapper::fromFullDto).toList();
-
-    return objectMapperService.convertToStringPrettyPrint(dtos);
+    return objectMapperService.convertToStringPrettyPrint(dto);
   }
 
   @Bean
