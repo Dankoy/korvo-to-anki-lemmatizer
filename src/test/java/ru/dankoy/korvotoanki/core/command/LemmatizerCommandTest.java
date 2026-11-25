@@ -2,6 +2,7 @@ package ru.dankoy.korvotoanki.core.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 
 import java.util.List;
@@ -80,7 +81,7 @@ class LemmatizerCommandTest {
 
     // Arrange
     given(vocabularyService.getAll()).willReturn(List.of());
-    given(lemmatizerService.lemmatize(any())).willReturn(List.of());
+    given(lemmatizerService.lemmatize(anyList())).willReturn(List.of());
     given(objectMapperService.convertToStringPrettyPrint(any())).willReturn("[]");
 
     // Assert lemmatize is not available before checks
@@ -132,7 +133,7 @@ class LemmatizerCommandTest {
 
     // Arrange
     given(vocabularyService.getAll()).willReturn(List.of());
-    given(lemmatizerService.lemmatize(any())).willReturn(List.of());
+    given(lemmatizerService.lemmatize(anyList())).willReturn(List.of());
     given(objectMapperService.convertToStringPrettyPrint(any())).willReturn("[]");
 
     // Act
@@ -202,5 +203,23 @@ class LemmatizerCommandTest {
     assertThat(captured.get(0).word()).isEqualTo("was");
     assertThat(captured.get(0).lemma()).isEqualTo("be");
     assertThat(captured.get(0).nextContext()).isEqualTo("(was)");
+  }
+
+  @Test
+  void lemmatizeWord_expectsLemmaReturnedEvenWhenSameAsWord() {
+
+    // Arrange
+    var vocab = new Vocabulary("example", null, 0, 0, 0, 0, null, null, 0);
+    var dto = new VocabularyLemmaFullDTO("example", "example", null, 0, 0, 0, 0, null, null, 0);
+
+    given(lemmatizerService.lemmatize(vocab)).willReturn(dto);
+    given(objectMapperService.convertToStringPrettyPrint(any())).willReturn("pretty json");
+
+    // Act
+    var actual = lemmatizerCommand.lemmatizeWord("example");
+
+    // Assert
+    assertThat(actual).isEqualTo("pretty json");
+    org.mockito.Mockito.verify(objectMapperService).convertToStringPrettyPrint(any());
   }
 }

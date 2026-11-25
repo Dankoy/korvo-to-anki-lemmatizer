@@ -3,7 +3,6 @@ package ru.dankoy.korvotoanki.core.service.lemmatizer;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -28,7 +27,6 @@ public class LemmatizerServiceImpl implements LemmatizerService {
 
   private final StanfordCoreNLP stanfordCoreNLP;
   private final VocabularyMapper vocabularyMapper;
-  private CountDownLatch latch;
 
   @LogExecutionTime
   @Override
@@ -42,12 +40,12 @@ public class LemmatizerServiceImpl implements LemmatizerService {
     int cores = Runtime.getRuntime().availableProcessors();
     List<List<VocabularyLemmaFullDTO>> split = splitToPartitions(dtos, cores);
 
-    latch = new CountDownLatch(split.size());
+    CountDownLatch latch = new CountDownLatch(split.size());
 
     try (ExecutorService executorService = Executors.newFixedThreadPool(cores)) {
 
       for (List<VocabularyLemmaFullDTO> sp : split) {
-        executorService.execute(() -> process(sp, result));
+        executorService.execute(() -> process(sp, result, latch));
       }
 
       try {
@@ -62,24 +60,38 @@ public class LemmatizerServiceImpl implements LemmatizerService {
     return result.stream().filter(v -> !v.word().equals(v.lemma())).toList();
   }
 
+  @Override
+  public VocabularyLemmaFullDTO lemmatize(Vocabulary vocabulary) {
+    return processOne(vocabularyMapper.addLemmaDto(vocabulary));
+  }
+
   private void process(
-      List<VocabularyLemmaFullDTO> vocabularies, List<VocabularyLemmaFullDTO> result) {
+      List<VocabularyLemmaFullDTO> vocabularies,
+      List<VocabularyLemmaFullDTO> result,
+      CountDownLatch latch) {
 
-    // lemmatize vocabs containing only one word
-    Set<VocabularyLemmaFullDTO> lemmatized =
-        vocabularies.stream()
-            .filter(v -> v.word().split(" ").length == 1)
-            .filter(v -> !v.word().contains("-"))
-            .map(
-                v -> {
-                  var coreDoc = stanfordCoreNLP.processToCoreDocument(v.word());
-                  return vocabularyMapper.updateLemmaDto(coreDoc.tokens().get(0).lemma(), v);
-                })
-            .collect(Collectors.toSet());
+    try {
+      List<VocabularyLemmaFullDTO> lemmatized =
+          vocabularies.stream().filter(v -> !v.word().contains("-")).map(this::processOne).toList();
 
-    result.addAll(lemmatized);
+      result.addAll(lemmatized);
+    } catch (Exception e) {
+      log.error(
+          "Something went wrong with lemmatization of a chunk of {} words", vocabularies.size(), e);
+    } finally {
+      latch.countDown();
+    }
+  }
 
-    latch.countDown();
+  private VocabularyLemmaFullDTO processOne(VocabularyLemmaFullDTO dto) {
+
+    var coreDoc = stanfordCoreNLP.processToCoreDocument(dto.word());
+
+    // convert list of tokens to string of lemmatized words
+    var lemma =
+        coreDoc.tokens().stream().map(token -> token.lemma()).collect(Collectors.joining(" "));
+
+    return vocabularyMapper.updateLemmaDto(lemma, dto);
   }
 
   private List<List<VocabularyLemmaFullDTO>> splitToPartitions(

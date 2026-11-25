@@ -271,4 +271,23 @@ public class LemmatizerServiceVirtualThreadsTest {
     assertThatThrownBy(() -> lemmatizerService.lemmatize(List.of(vocabulary)))
         .isInstanceOf(NullPointerException.class);
   }
+
+  @Test
+  public void testLemmatizeWhenCoreNlpThrows_expectsWordSkippedWithoutException() {
+
+    // Arrange
+    Vocabulary vocabulary = new Vocabulary("examples", null, 0, 0, 0, 0, null, null, 0);
+    VocabularyLemmaFullDTO dto =
+        new VocabularyLemmaFullDTO("examples", null, null, 0, 0, 0, 0, null, null, 0);
+
+    when(vocabularyMapper.addLemmaDto(vocabulary)).thenReturn(dto);
+    when(stanfordCoreNLP.processToCoreDocument("examples"))
+        .thenThrow(new RuntimeException("corenlp error"));
+
+    // Act
+    List<VocabularyLemmaFullDTO> result = lemmatizerService.lemmatize(List.of(vocabulary));
+
+    // Assert
+    assertEquals(0, result.size());
+  }
 }

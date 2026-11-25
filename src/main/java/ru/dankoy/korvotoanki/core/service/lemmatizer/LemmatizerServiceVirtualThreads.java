@@ -2,6 +2,7 @@ package ru.dankoy.korvotoanki.core.service.lemmatizer;
 
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,7 +44,10 @@ public class LemmatizerServiceVirtualThreads implements LemmatizerService {
                     return CompletableFuture.supplyAsync(() -> process(dto), executorService)
                         .exceptionally(
                             ex -> {
-                              log.error("Something went wrong with lemmatization of word: {}", ex);
+                              log.error(
+                                  "Something went wrong with lemmatization of word: {}",
+                                  dto.word(),
+                                  ex);
                               return null;
                             });
                   })
@@ -55,17 +59,24 @@ public class LemmatizerServiceVirtualThreads implements LemmatizerService {
                   // map cfs results into list
                   future -> cfs.stream().map(CompletableFuture::join).flatMap(Stream::of).toList())
               .thenApply(
-                  // filter words
+                  // filter out failed words, then filter words
                   resultList ->
-                      resultList.stream().filter(v -> !v.word().equals(v.lemma())).toList());
+                      resultList.stream()
+                          .filter(Objects::nonNull)
+                          .filter(v -> !v.word().equals(v.lemma()))
+                          .toList());
 
       return allOf.join();
     }
   }
 
+  @Override
+  public VocabularyLemmaFullDTO lemmatize(Vocabulary vocabulary) {
+    return process(vocabularyMapper.addLemmaDto(vocabulary));
+  }
+
   private VocabularyLemmaFullDTO process(VocabularyLemmaFullDTO vocabulary) {
 
-    // lemmatize vocabs containing only one word
     var coreDoc = stanfordCoreNLP.processToCoreDocument(vocabulary.word());
 
     // convert list of CoreDocuments to string of lemmatized words

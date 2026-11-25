@@ -85,14 +85,46 @@ public class LemmatizerServiceImplTest {
   }
 
   @Test
-  public void testLemmatizeWithMultipleWordVocabulary_expectsWordNotProcessed() {
+  public void testLemmatizeWithMultipleWordVocabulary_expectsCorrectResult() {
 
     // Arrange
     Vocabulary vocabulary = new Vocabulary("gave back", null, 0, 0, 0, 0, null, null, 0);
     VocabularyLemmaFullDTO expectedDto =
-        new VocabularyLemmaFullDTO("gave back", null, null, 0, 0, 0, 0, null, null, 0);
+        new VocabularyLemmaFullDTO("gave back", "give back", null, 0, 0, 0, 0, null, null, 0);
+
+    var coreDocMock = mock(CoreDocument.class);
+    var tokenMock1 = mock(CoreLabel.class);
+    var tokenMock2 = mock(CoreLabel.class);
+
+    when(tokenMock1.lemma()).thenReturn("give");
+    when(tokenMock2.lemma()).thenReturn("back");
+
+    when(coreDocMock.tokens()).thenReturn(List.of(tokenMock1, tokenMock2));
 
     when(vocabularyMapper.addLemmaDto(vocabulary)).thenReturn(expectedDto);
+    when(vocabularyMapper.updateLemmaDto(Mockito.anyString(), Mockito.eq(expectedDto)))
+        .thenReturn(expectedDto);
+    when(stanfordCoreNLP.processToCoreDocument("gave back")).thenReturn(coreDocMock);
+
+    // Act
+    List<VocabularyLemmaFullDTO> result = lemmatizerService.lemmatize(List.of(vocabulary));
+
+    // Assert
+    assertEquals(1, result.size());
+    assertEquals(expectedDto, result.get(0));
+  }
+
+  @Test
+  public void testLemmatizeWhenCoreNlpThrows_expectsChunkSkippedWithoutHang() {
+
+    // Arrange
+    Vocabulary vocabulary = new Vocabulary("example", null, 0, 0, 0, 0, null, null, 0);
+    VocabularyLemmaFullDTO dto =
+        new VocabularyLemmaFullDTO("example", null, null, 0, 0, 0, 0, null, null, 0);
+
+    when(vocabularyMapper.addLemmaDto(vocabulary)).thenReturn(dto);
+    when(stanfordCoreNLP.processToCoreDocument("example"))
+        .thenThrow(new RuntimeException("corenlp error"));
 
     // Act
     List<VocabularyLemmaFullDTO> result = lemmatizerService.lemmatize(List.of(vocabulary));
